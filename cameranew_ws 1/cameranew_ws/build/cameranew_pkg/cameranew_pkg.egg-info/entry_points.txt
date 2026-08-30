@@ -1,0 +1,12 @@
+[console_scripts]
+camera_manager = cameranew_pkg.camera_manager:main
+can_scienceveri = cameranew_pkg.can_scienceveri:main
+dual_webcam = cameranew_pkg.dual_webcam:main
+gps_science = cameranew_pkg.gps_science:main
+ip_camera_publisher = cameranew_pkg.ip_camera_publisher:main
+science = cameranew_pkg.science:main
+science_web = cameranew_pkg.science_web:main
+webcam = cameranew_pkg.webcam:main
+webcam2 = cameranew_pkg.webcam2:main
+zed_compressed_throttle = cameranew_pkg.zed_compressed_throttle:main
+

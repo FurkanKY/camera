@@ -1,0 +1,37 @@
+running develop
+running egg_info
+creating cameranew_pkg.egg-info
+writing cameranew_pkg.egg-info/PKG-INFO
+writing dependency_links to cameranew_pkg.egg-info/dependency_links.txt
+writing entry points to cameranew_pkg.egg-info/entry_points.txt
+writing requirements to cameranew_pkg.egg-info/requires.txt
+writing top-level names to cameranew_pkg.egg-info/top_level.txt
+writing manifest file 'cameranew_pkg.egg-info/SOURCES.txt'
+reading manifest file 'cameranew_pkg.egg-info/SOURCES.txt'
+writing manifest file 'cameranew_pkg.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/python3.10/site-packages/cameranew-pkg.egg-link (link to .)
+Installing camera_manager script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+Installing can_scienceveri script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+Installing dual_webcam script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+Installing gps_science script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+Installing ip_camera_publisher script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+Installing science script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+Installing science_web script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+Installing webcam script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+Installing webcam2 script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+Installing zed_compressed_throttle script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+
+Installed /home/yildizrover/cameranew_ws/build/cameranew_pkg
+running symlink_data
+creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/ament_index
+creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/ament_index/resource_index
+creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/ament_index/resource_index/packages
+symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/resource/cameranew_pkg -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/ament_index/resource_index/packages
+symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/package.xml -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg
+creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/launch
+symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/launch/cams.launch.py -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/launch
+symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/launch/mikroskop.launch.py -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/launch
+symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/launch/camera_manager.launch.py -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/launch
+creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/config
+symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/config/zed_low_res.yaml -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/config

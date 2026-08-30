@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Tarım Veri İzleme Paneli</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #fff3f3;
+      color: #111;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      width: 100%;
+      height: 8px;
+      background: #980000;
+    }
+
+    .container {
+      width: 100%;
+      padding: 28px 22px 18px 22px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 24px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: #fdfdfd;
+      border: 1px solid #ee9b9b;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(150, 0, 0, 0.16);
+    }
+
+    .point-card {
+      width: 470px;
+      min-height: 235px;
+      padding: 18px 24px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .red-line {
+      height: 1px;
+      width: 100%;
+      background: #d45b5b;
+      margin-bottom: 18px;
+    }
+
+    .point-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 13px;
+      padding: 0 8px;
+    }
+
+    .point-item {
+      display: grid;
+      grid-template-columns: 32px 100px 1fr;
+      align-items: center;
+      column-gap: 10px;
+      font-size: 16px;
+    }
+
+    .point-icon {
+      width: 28px;
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .point-label {
+      font-weight: bold;
+    }
+
+    .point-value {
+      color: #333;
+      font-weight: bold;
+    }
+
+    .point-value.red {
+      color: #a00000;
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px 18px;
+    }
+
+    .chart-card {
+      height: 235px;
+      padding: 12px 14px 10px 14px;
+    }
+
+    .chart-title {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .chart-divider {
+      height: 1px;
+      background: #e18383;
+      margin-bottom: 8px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 165px;
+      display: block;
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .footer span {
+      margin: 0 14px;
+    }
+
+    @media (max-width: 1300px) {
+      .charts-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 950px) {
+      .charts-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .point-card {
+        width: 90%;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .point-card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-bar"></div>
+
+  <div class="container">
+
+    <!-- ÜSTTE 2 NOKTA -->
+    <div class="summary-row">
+
+      <!-- NOKTA 1 -->
+      <div class="card point-card">
+        <div class="card-title">Nokta 1</div>
+        <div class="red-line"></div>
+
+        <div class="point-grid">
+          <div class="point-item">
+            <div class="point-icon">⛰️</div>
+            <div class="point-label">Altitude:</div>
+            <div id="point1AltitudeValue" class="point-value red">1408.39 m</div>
+          </div>
+
+          <div class="point-item">
+            <div class="point-icon">📍</div>
+            <div class="point-label">Lat:</div>
+            <div id="point1LatValue" class="point-value">--</div>
+          </div>
+
+          <div class="point-item">
+            <div class="point-icon">📌</div>
+            <div class="point-label">Lon:</div>
+            <div id="point1LonValue" class="point-value">--</div>
+          </div>
+
+          <div class="point-item">
+            <div class="point-icon">🎯</div>
+            <div class="point-label">Accuracy:</div>
+            <div id="point1AccuracyValue" class="point-value">-- m</div>
+          </div>
+
+          <div class="point-item">
+            <div class="point-icon">🛰️</div>
+            <div class="point-label">Satellites:</div>
+            <div id="point1SatelliteValue" class="point-value red">16</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOKTA 2 -->
+      <div class="card point-card">
+        <div class="card-title">Nokta 2</div>
+        <div class="red-line"></div>
+
+        <div class="point-grid">
+          <div class="point-item">
+            <div class="point-icon">⛰️</div>
+            <div class="point-label">Altitude:</div>
+            <div id="point2AltitudeValue" class="point-value red">-- m</div>
+          </div>
+
+          <div class="point-item">
+            <div class="point-icon">📍</div>
+            <div class="point-label">Lat:</div>
+            <div id="point2LatValue" class="point-value">--</div>
+          </div>
+
+          <div class="point-item">
+            <div class="point-icon">📌</div>
+            <div class="point-label">Lon:</div>
+            <div id="point2LonValue" class="point-value">--</div>
+          </div>
+
+          <div class="point-item">
+            <div class="point-icon">🎯</div>
+            <div class="point-label">Accuracy:</div>
+            <div id="point2AccuracyValue" class="point-value">-- m</div>
+          </div>
+
+          <div class="point-item">
+            <div class="point-icon">🛰️</div>
+            <div class="point-label">Satellites:</div>
+            <div id="point2SatelliteValue" class="point-value red">--</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- GRAFİKLER -->
+    <div class="charts-grid" id="chartsGrid"></div>
+
+    <!-- ALT BİLGİ -->
+    <div class="footer">
+      <span>🕒 Son güncelleme: <b id="updateTime">--:--:--</b></span>
+      |
+      <span>📅 Tarih: <b id="updateDate">--.--.----</b></span>
+    </div>
+
+  </div>
+
+  <script>
+    const sensors = [
+      {
+        title: "O₂ (%)",
+        unit: "%",
+        min: 0,
+        max: 60,
+        base: 21,
+        noise: 1.2
+      },
+      {
+        title: "CO₂ (ppm)",
+        unit: "ppm",
+        min: 0,
+        max: 2000,
+        base: 950,
+        noise: 80
+      },
+      {
+        title: "CO (ppm)",
+        unit: "ppm",
+        min: 0,
+        max: 40,
+        base: 3,
+        noise: 0.8
+      },
+      {
+        title: "NH₃ (ppm)",
+        unit: "ppm",
+        min: 0,
+        max: 40,
+        base: 3,
+        noise: 1
+      },
+      {
+        title: "Air Temperature (°C)",
+        unit: "°C",
+        min: 0,
+        max: 60,
+        base: 25,
+        noise: 1.2
+      },
+      {
+        title: "Humidity (%)",
+        unit: "%",
+        min: 0,
+        max: 100,
+        base: 45,
+        noise: 4
+      },
+      {
+        title: "Pressure (hPa)",
+        unit: "hPa",
+        min: 400,
+        max: 1200,
+        base: 1000,
+        noise: 15
+      },
+      {
+        title: "Soil Moisture (%)",
+        unit: "%",
+        min: 0,
+        max: 100,
+        base: 26,
+        noise: 4
+      },
+      {
+        title: "Soil Temperature (°C)",
+        unit: "°C",
+        min: 0,
+        max: 60,
+        base: 16,
+        noise: 1.4
+      },
+      {
+        title: "pH",
+        unit: "pH",
+        min: 0,
+        max: 15,
+        base: 6.8,
+        noise: 0.25
+      },
+      {
+        title: "EC (µS/cm)",
+        unit: "µS/cm",
+        min: 0,
+        max: 2000,
+        base: 950,
+        noise: 80
+      },
+      {
+        title: "NPK (ppm)",
+        unit: "ppm",
+        min: 0,
+        max: 200,
+        base: 95,
+        noise: 10
+      }
+    ];
+
+    const charts = [];
+
+    function createSensorCards() {
+      const grid = document.getElementById("chartsGrid");
+
+      sensors.forEach((sensor, index) => {
+        const card = document.createElement("div");
+        card.className = "card chart-card";
+
+        card.innerHTML = `
+          <div class="chart-title">${sensor.title}</div>
+          <div class="chart-divider"></div>
+          <canvas id="chart-${index}"></canvas>
+        `;
+
+        grid.appendChild(card);
+
+        const canvas = document.getElementById(`chart-${index}`);
+
+        charts.push({
+          canvas: canvas,
+          ctx: canvas.getContext("2d"),
+          sensor: sensor,
+          data: generateInitialData(sensor)
+        });
+      });
+    }
+
+    function generateInitialData(sensor) {
+      const data = [];
+
+      for (let i = 0; i < 45; i++) {
+        data.push(sensor.base + randomNoise(sensor.noise));
+      }
+
+      return data;
+    }
+
+    function randomNoise(amount) {
+      return (Math.random() - 0.5) * amount;
+    }
+
+    function resizeCanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+
+      const ctx = canvas.getContext("2d");
+
+      ctx.setTransform(
+        window.devicePixelRatio,
+        0,
+        0,
+        window.devicePixelRatio,
+        0,
+        0
+      );
+    }
+
+    function drawChart(chart) {
+      const canvas = chart.canvas;
+      const ctx = chart.ctx;
+      const sensor = chart.sensor;
+      const data = chart.data;
+
+      resizeCanvas(canvas);
+
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
+      const marginLeft = 42;
+      const marginRight = 12;
+      const marginTop = 10;
+      const marginBottom = 30;
+
+      const plotW = w - marginLeft - marginRight;
+      const plotH = h - marginTop - marginBottom;
+
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.font = "11px Arial";
+      ctx.fillStyle = "#333";
+      ctx.strokeStyle = "#dddddd";
+      ctx.lineWidth = 1;
+
+      const yTicks = 5;
+
+      for (let i = 0; i <= yTicks; i++) {
+        const y = marginTop + (plotH / yTicks) * i;
+        const value = sensor.max - ((sensor.max - sensor.min) / yTicks) * i;
+
+        ctx.beginPath();
+        ctx.setLineDash([4, 4]);
+        ctx.moveTo(marginLeft, y);
+        ctx.lineTo(marginLeft + plotW, y);
+        ctx.stroke();
+
+        ctx.setLineDash([]);
+        ctx.fillText(formatNumber(value), 5, y + 4);
+      }
+
+      const xLabels = [
+        "14:20",
+        "14:25",
+        "14:30",
+        "14:35",
+        "14:40",
+        "14:45",
+        "14:50",
+        "14:55",
+        "15:00"
+      ];
+
+      xLabels.forEach((label, i) => {
+        const x = marginLeft + (plotW / (xLabels.length - 1)) * i;
+
+        ctx.beginPath();
+        ctx.setLineDash([4, 4]);
+        ctx.moveTo(x, marginTop);
+        ctx.lineTo(x, marginTop + plotH);
+        ctx.stroke();
+
+        ctx.setLineDash([]);
+        ctx.fillText(label, x - 14, marginTop + plotH + 20);
+      });
+
+      ctx.strokeStyle = "#222";
+      ctx.lineWidth = 1.2;
+
+      ctx.beginPath();
+      ctx.moveTo(marginLeft, marginTop);
+      ctx.lineTo(marginLeft, marginTop + plotH);
+      ctx.lineTo(marginLeft + plotW, marginTop + plotH);
+      ctx.stroke();
+
+      ctx.save();
+      ctx.translate(12, marginTop + plotH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText(sensor.unit, 0, 0);
+      ctx.restore();
+
+      ctx.strokeStyle = "#d00000";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+
+      data.forEach((value, i) => {
+        const x = marginLeft + (plotW / (data.length - 1)) * i;
+        const normalized = (value - sensor.min) / (sensor.max - sensor.min);
+        const y = marginTop + plotH - normalized * plotH;
+
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+
+      ctx.stroke();
+    }
+
+    function formatNumber(value) {
+      if (Math.abs(value) >= 100) {
+        return value.toFixed(0);
+      }
+
+      if (Math.abs(value) >= 10) {
+        return value.toFixed(0);
+      }
+
+      return value.toFixed(1);
+    }
+
+    function formatWithUnit(value, unit) {
+      if (value === "--" || value === null || value === undefined) {
+        return "--" + unit;
+      }
+
+      return value + unit;
+    }
+
+    function updateSummary() {
+      const now = new Date();
+
+      document.getElementById("updateTime").textContent =
+        now.toLocaleTimeString("tr-TR");
+
+      document.getElementById("updateDate").textContent =
+        now.toLocaleDateString("tr-TR");
+
+      /*
+        BURASI 2 NOKTANIN VERİ ALANI
+
+        Gerçek veri gelince sadece buradaki point1 ve point2
+        değerlerini değiştirmen yeterli.
+
+        point1 = 1. nokta
+        point2 = 2. nokta
+      */
+
+      const point1 = {
+        altitude: 1408.39,
+        lat: "38.3300355",
+        lon: "-110.7932417",
+        accuracy: "2.1m",
+        satellites: 16
+      };
+
+      const point2 = {
+        altitude: "1408.5",
+        lat: "38.3300361",
+        lon: "110.7932420",
+        accuracy: "2.6m",
+        satellites: "15"
+      };
+
+      document.getElementById("point1AltitudeValue").textContent =
+        formatWithUnit(point1.altitude, " m");
+
+      document.getElementById("point1LatValue").textContent =
+        point1.lat;
+
+      document.getElementById("point1LonValue").textContent =
+        point1.lon;
+
+      document.getElementById("point1AccuracyValue").textContent =
+        formatWithUnit(point1.accuracy, " m");
+
+      document.getElementById("point1SatelliteValue").textContent =
+        point1.satellites;
+
+
+      document.getElementById("point2AltitudeValue").textContent =
+        formatWithUnit(point2.altitude, " m");
+
+      document.getElementById("point2LatValue").textContent =
+        point2.lat;
+
+      document.getElementById("point2LonValue").textContent =
+        point2.lon;
+
+      document.getElementById("point2AccuracyValue").textContent =
+        formatWithUnit(point2.accuracy, " m");
+
+      document.getElementById("point2SatelliteValue").textContent =
+        point2.satellites;
+    }
+
+    function updateData() {
+      charts.forEach(chart => {
+        const sensor = chart.sensor;
+
+        chart.data.shift();
+
+        let newValue =
+          chart.data[chart.data.length - 1] + randomNoise(sensor.noise);
+
+        const lowerLimit = sensor.base - sensor.noise * 2;
+        const upperLimit = sensor.base + sensor.noise * 2;
+
+        if (newValue < lowerLimit) {
+          newValue = lowerLimit;
+        }
+
+        if (newValue > upperLimit) {
+          newValue = upperLimit;
+        }
+
+        chart.data.push(newValue);
+
+        drawChart(chart);
+      });
+
+      updateSummary();
+    }
+
+    window.addEventListener("resize", () => {
+      charts.forEach(drawChart);
+    });
+
+    createSensorCards();
+    charts.forEach(drawChart);
+    updateSummary();
+
+    setInterval(updateData, 1000);
+  </script>
+</body>
+</html>

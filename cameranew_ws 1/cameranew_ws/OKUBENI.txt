@@ -1,0 +1,121 @@
+KAMERA PAKETI - KURULUM VE KULLANIM
+===================================
+
+Paket icerigi:
+  camera_pkg  : rover (AGX) tarafina kurulur.
+  viewer.py   : yer istasyonu (PC) tarafinda calistirilir.
+
+
+DEGISIKLIKLER
+-------------
+- Kamera duzeni 4 webcam + 1 IP kamera olarak ayarlanmistir. ZED
+  kameralari kullanilmamaktadir.
+- Webcam'ler seri numarasina (by-id) gore sabitlenmistir. Boylece
+  hangi USB portuna takilirsa takilsin dogru kamera acilir; /dev/video
+  numaralarinin degismesi sorunu ortadan kaldirilmistir.
+- Kameralar acilista otomatik acilir. viewer uzerindeki 1-5 tuslariyla
+  tek tek acilip kapatilabilir.
+- Kamera baglantisi kesilirse ilgili node kapanmaz; yeniden baglanma
+  otomatik denenir.
+- camera_manager acilirken onceki calistirmadan kalan kamera
+  process'leri temizlenir.
+- cams.launch.py yalnizca camera_manager (ve science) node'unu
+  baslatir; kameralar camera_manager uzerinden yonetilir.
+- IP kamera yayin hizi 3 fps'ten 10 fps'e cikarilmistir; onceki deger
+  goruntuyu slayt gibi kasik gosteriyordu.
+- viewer'in gecikmesi dusurulmustur: ic throttle tavani ve cizim hizi
+  yukseltilmistir. Boylece gelen kareler bekletilmeden gosterilir
+  (manuel surus icin daha dusuk gecikme). Bant maliyeti yoktur.
+
+
+KURULUM (AGX)
+-------------
+1. camera_pkg klasoru asagidaki konuma, mevcut klasorun uzerine
+   kopyalanir:
+       ~/camera_ws/src/camera_pkg/
+
+2. Paket derlenir:
+       cd ~/camera_ws
+       colcon build --packages-select camera_pkg
+       source install/setup.bash
+
+
+CALISTIRMA
+----------
+AGX (onceki komutla aynidir):
+       source ~/ros2_ws/install/setup.bash
+       source ~/camera_ws/install/setup.bash
+       ros2 launch camera_pkg cams.launch.py
+
+PC:
+       python3 viewer.py
+
+viewer tuslari:
+       1 -> web1
+       2 -> web2
+       3 -> web3
+       4 -> web4  (4. kamera eklendiginde)
+       5 -> ip kamera
+       q -> tumu kapatilir ve cikilir
+Tuslarin isleyebilmesi icin viewer penceresi secili olmalidir.
+
+
+VIEWER GOSTERGELERI
+-------------------
+Her kamera panelinde iki teshis gostergesi bulunur:
+
+- Sag ust kosede FPS: paneldeki kameranin o an aldigi frame hizidir.
+  Yesil = akici, sari = dusuk, kirmizi = neredeyse yok. Bir kamera
+  acikken FPS dususu, o kameranin ag/islemci yukunden etkilendigini
+  gosterir.
+- Panel ortasinda "GORUNTU DONDU" bandi: kamera acik gorunuyor ama
+  2 saniyedir yeni goruntu gelmiyorsa cikar. Yaninda kac saniyedir
+  akmadigi yazar. Bu durumda ilgili kamera 1-5 tusuyla kapatilip
+  kalan kameralarla devam edilebilir.
+
+
+MANUEL SURUS / GECIKME
+----------------------
+- IP kamera manuel surus icin kullanilir; dusuk gecikme onceliklidir.
+- Bant veya gecikme sikisirsa, surus disindaki webcam'ler (1-4 tuslari)
+  kapatilip yalnizca IP (5) acik birakilabilir. Daha az kamera = IP'ye
+  daha cok bant ve islemci = daha dusuk gecikme. Hassas manevrada bu
+  onerilir.
+- Panel FPS gostergesi ile hangi kameranin yuku artirdigi izlenebilir.
+
+
+NOTLAR
+------
+- AGX ve PC ayni ROS agi / ayni ROS_DOMAIN_ID uzerinde olmalidir.
+
+- Her kamera AYRI ayarlanir; ortak ayar yoktur. camera_manager.py
+  icinde WEBCAMS sozlugu ve IP_CAMERA sozlugu bulunur. Her kamera icin
+  device, width, height, fps, jpeg_quality alanlari bagimsiz
+  degistirilebilir. Degisiklikten sonra paket tekrar derlenir.
+
+- Kamera-panel eslesmesi ters ise, WEBCAMS icindeki "device" yollari
+  kameralar arasinda yer degistirilir (veya cam_name atamasi) ve paket
+  tekrar derlenir. Mevcut atama:
+       web1 -> Logitech Brio 100
+       web2 -> Logitech C922
+       web3 -> Sonix USB kamera
+
+- 4. kamera eklendiginde:
+       ls -la /dev/v4l/by-id/
+  cikan yol WEBCAMS["web4"]["device"] alanina yazilir ve
+  AUTO_START_CAMERAS listesine "web4" eklenir. Paket tekrar derlenir.
+
+- IP kamera daha hafif olan alt akisa (ch01/1) alinabilir. Once VLC ile
+  dogrulanmalidir: rover agindaki bir PC'de VLC acilir (Ctrl+N) ve
+  su adres denenir:
+       rtsp://<kullanici>:<sifre>@192.168.1.99:554/ch01/1
+  (Gercek kimlik bilgisi guvenlik nedeniyle bu dosyadan kaldirildi.
+   Onceki surumde burada duz metin bir kullanici/sifre vardi; repo
+   paylasilirsa bu sizinti sayilir. Gercek degeri ekip parola
+   yoneticisinde veya baska guvenli bir yerde saklayin.)
+  Goruntu geliyorsa ip_camera_publisher.py'nin ip_url parametresine
+  (launch/komut satirindan, koda gomulmeden) bu adres verilir.
+
+- Pakette kullanilmayan bazi dosyalar (webcam2.py, dual_webcam.py,
+  zed_compressed_throttle.py) bulunmaktadir. Bu dosyalar calisan
+  sistemi etkilemez; silinmemistir.

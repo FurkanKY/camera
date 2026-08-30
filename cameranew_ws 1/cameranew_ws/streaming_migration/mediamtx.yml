@@ -1,0 +1,30 @@
+# Faz 1 - MediaMTX konfigurasyonu (video mimarisi gecis planinin ilk adimi)
+#
+# Amac: mevcut ROS2/JPEG kamera hattina hic dokunmadan, tek bir kamera (web1)
+# icin MediaMTX + ffmpeg + H.264 zincirini izole olarak dogrulamak.
+#
+# Calistirma (Jetson veya herhangi bir Linux gelistirme makinesinde):
+#   ./mediamtx streaming_migration/mediamtx.yml
+#
+# Dogrulama:
+#   RTSP (hizli/el ile kontrol):
+#       ffplay rtsp://127.0.0.1:8554/web1
+#       veya VLC ile ayni adres
+#   WHEP (WebRTC) endpoint (Faz 2'de bir client ile denenecek):
+#       http://127.0.0.1:8889/web1/whep
+#
+# Onkosul: MediaMTX binary'si bu makinede kurulu olmali.
+#   https://github.com/bluenviron/mediamtx (Jetson icin arm64 release)
+# Bu dosya MediaMTX'i kurmuyor, sadece calisirken kullanacagi ayarlari verir.
+
+# RTSP sunucusu - ffmpeg buraya publish edecek (test_stream_web1.sh)
+rtspAddress: :8554
+
+# WebRTC/WHEP sunucusu - Faz 2'de viewer buradan izleyecek
+webrtcAddress: :8889
+
+paths:
+  web1:
+    # ffmpeg RTSP ANNOUNCE ile publish eder; MediaMTX bunu kabul edip
+    # RTSP okuyuculara ve WHEP/WebRTC istemcilerine yeniden dagitir.
+    source: publisher

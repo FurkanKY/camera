@@ -1,0 +1,39 @@
+[1.768s] Invoking command in '/home/yildizrover/cameranew_ws/build/cameranew_pkg': PYTHONPATH=/home/yildizrover/cameranew_ws/build/cameranew_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/yildizrover/cameranew_ws/build/cameranew_pkg/build --no-deps symlink_data
+[2.244s] running develop
+[2.530s] running egg_info
+[2.530s] creating cameranew_pkg.egg-info
+[2.531s] writing cameranew_pkg.egg-info/PKG-INFO
+[2.531s] writing dependency_links to cameranew_pkg.egg-info/dependency_links.txt
+[2.531s] writing entry points to cameranew_pkg.egg-info/entry_points.txt
+[2.532s] writing requirements to cameranew_pkg.egg-info/requires.txt
+[2.532s] writing top-level names to cameranew_pkg.egg-info/top_level.txt
+[2.532s] writing manifest file 'cameranew_pkg.egg-info/SOURCES.txt'
+[2.535s] reading manifest file 'cameranew_pkg.egg-info/SOURCES.txt'
+[2.535s] writing manifest file 'cameranew_pkg.egg-info/SOURCES.txt'
+[2.620s] running build_ext
+[2.621s] Creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/python3.10/site-packages/cameranew-pkg.egg-link (link to .)
+[2.622s] Installing camera_manager script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+[2.622s] Installing can_scienceveri script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+[2.623s] Installing dual_webcam script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+[2.623s] Installing gps_science script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+[2.623s] Installing ip_camera_publisher script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+[2.624s] Installing science script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+[2.624s] Installing science_web script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+[2.624s] Installing webcam script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+[2.625s] Installing webcam2 script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+[2.625s] Installing zed_compressed_throttle script to /home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/cameranew_pkg
+[2.625s] 
+[2.626s] Installed /home/yildizrover/cameranew_ws/build/cameranew_pkg
+[2.626s] running symlink_data
+[2.626s] creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/ament_index
+[2.626s] creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/ament_index/resource_index
+[2.626s] creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/ament_index/resource_index/packages
+[2.627s] symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/resource/cameranew_pkg -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/ament_index/resource_index/packages
+[2.627s] symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/package.xml -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg
+[2.627s] creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/launch
+[2.627s] symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/launch/cams.launch.py -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/launch
+[2.628s] symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/launch/mikroskop.launch.py -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/launch
+[2.628s] symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/launch/camera_manager.launch.py -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/launch
+[2.628s] creating /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/config
+[2.628s] symbolically linking /home/yildizrover/cameranew_ws/build/cameranew_pkg/config/zed_low_res.yaml -> /home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/config
+[2.716s] Invoked command in '/home/yildizrover/cameranew_ws/build/cameranew_pkg' returned '0': PYTHONPATH=/home/yildizrover/cameranew_ws/build/cameranew_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/yildizrover/cameranew_ws/build/cameranew_pkg/build --no-deps symlink_data

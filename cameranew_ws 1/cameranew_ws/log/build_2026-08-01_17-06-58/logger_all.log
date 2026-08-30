@@ -1,0 +1,129 @@
+[0.173s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--symlink-install']
+[0.173s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=True, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=12, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0xffff95e68af0>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0xffff95e68310>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0xffff95e68310>>)
+[0.475s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.475s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.475s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.475s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.475s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.475s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.475s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/yildizrover/cameranew_ws'
+[0.475s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.476s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.476s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.476s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.476s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.476s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.476s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.476s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.476s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.517s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.517s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.517s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.517s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.517s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.517s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.517s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.517s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.518s] Level 1:colcon.colcon_core.package_identification:_identify(cameranew_pkg) by extensions ['ignore', 'ignore_ament_install']
+[0.518s] Level 1:colcon.colcon_core.package_identification:_identify(cameranew_pkg) by extension 'ignore'
+[0.518s] Level 1:colcon.colcon_core.package_identification:_identify(cameranew_pkg) by extension 'ignore_ament_install'
+[0.518s] Level 1:colcon.colcon_core.package_identification:_identify(cameranew_pkg) by extensions ['colcon_pkg']
+[0.518s] Level 1:colcon.colcon_core.package_identification:_identify(cameranew_pkg) by extension 'colcon_pkg'
+[0.518s] Level 1:colcon.colcon_core.package_identification:_identify(cameranew_pkg) by extensions ['colcon_meta']
+[0.518s] Level 1:colcon.colcon_core.package_identification:_identify(cameranew_pkg) by extension 'colcon_meta'
+[0.518s] Level 1:colcon.colcon_core.package_identification:_identify(cameranew_pkg) by extensions ['ros']
+[0.518s] Level 1:colcon.colcon_core.package_identification:_identify(cameranew_pkg) by extension 'ros'
+[0.522s] DEBUG:colcon.colcon_core.package_identification:Package 'cameranew_pkg' with type 'ros.ament_python' and name 'cameranew_pkg'
+[0.523s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.523s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.523s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.523s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.523s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.523s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.523s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.523s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.523s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.523s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.523s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.555s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.556s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.557s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/yildizrover/cameranew_ws/install/cameranew_pkg' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.560s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 2 installed packages in /home/yildizrover/rscp_ws/install
+[0.560s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 2 installed packages in /home/yildizrover/stage3_ws/install
+[0.561s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 0 installed packages in /home/yildizrover/cameranew_ws/install
+[0.561s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 1 installed packages in /home/yildizrover/point_wsno/install
+[0.562s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 2 installed packages in /home/yildizrover/aruco_ws/install
+[0.563s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 4 installed packages in /home/yildizrover/ros2_ws/install
+[0.564s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 1 installed packages in /home/yildizrover/manual_ws/install
+[0.564s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 4 installed packages in /home/yildizrover/rover_auto_ws/install
+[0.565s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 1 installed packages in /home/yildizrover/model_ws/install
+[0.566s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 2 installed packages in /home/yildizrover/camera_ws/install
+[0.566s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 1 installed packages in /home/yildizrover/main_ws/install
+[0.567s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 2 installed packages in /home/yildizrover/lidar_ws/install
+[0.567s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 1 installed packages in /home/yildizrover/arc_ws/install
+[0.569s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 345 installed packages in /opt/ros/humble
+[0.573s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.641s] Level 5:colcon.colcon_core.verb:set package 'cameranew_pkg' build argument 'cmake_args' from command line to 'None'
+[0.641s] Level 5:colcon.colcon_core.verb:set package 'cameranew_pkg' build argument 'cmake_target' from command line to 'None'
+[0.641s] Level 5:colcon.colcon_core.verb:set package 'cameranew_pkg' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.641s] Level 5:colcon.colcon_core.verb:set package 'cameranew_pkg' build argument 'cmake_clean_cache' from command line to 'False'
+[0.641s] Level 5:colcon.colcon_core.verb:set package 'cameranew_pkg' build argument 'cmake_clean_first' from command line to 'False'
+[0.641s] Level 5:colcon.colcon_core.verb:set package 'cameranew_pkg' build argument 'cmake_force_configure' from command line to 'False'
+[0.641s] Level 5:colcon.colcon_core.verb:set package 'cameranew_pkg' build argument 'ament_cmake_args' from command line to 'None'
+[0.641s] Level 5:colcon.colcon_core.verb:set package 'cameranew_pkg' build argument 'catkin_cmake_args' from command line to 'None'
+[0.641s] Level 5:colcon.colcon_core.verb:set package 'cameranew_pkg' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.642s] DEBUG:colcon.colcon_core.verb:Building package 'cameranew_pkg' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/yildizrover/cameranew_ws/build/cameranew_pkg', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/yildizrover/cameranew_ws/install/cameranew_pkg', 'merge_install': False, 'path': '/home/yildizrover/cameranew_ws/cameranew_pkg', 'symlink_install': True, 'test_result_base': None}
+[0.642s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.644s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.644s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/yildizrover/cameranew_ws/cameranew_pkg' with build type 'ament_python'
+[0.645s] Level 1:colcon.colcon_core.shell:create_environment_hook('cameranew_pkg', 'ament_prefix_path')
+[0.648s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.648s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/hook/ament_prefix_path.ps1'
+[0.650s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/hook/ament_prefix_path.dsv'
+[0.650s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/hook/ament_prefix_path.sh'
+[0.651s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.651s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.156s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/yildizrover/cameranew_ws/cameranew_pkg'
+[1.157s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.157s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.885s] DEBUG:colcon.colcon_core.task.python.build:Available setuptools commands: dist_info, install_headers, bdist, register, upload, install, easy_install, build_py, egg_info, bdist_dumb, build_scripts, check, install_data, sdist, symlink_data, build, build_clib, bdist_egg, bdist_wheel, upload_docs, install_lib, test, alias, rotate, saveopts, build_ext, develop, install_scripts, install_egg_info, clean, setopt, bdist_rpm
+[2.407s] DEBUG:colcon.colcon_core.task.python.build:Available setuptools 'develop' options: --version, --always-copy, --user, --exclude-scripts, --find-links, --script-dir, --uninstall, --install-dir, --allow-hosts, --record, --optimize, --no-user-cfg, --verbose, --help, --always-unzip, --egg-path, --prefix, --build-directory, --editable, --zip-ok, --multi-version, --index-url, --local-snapshots-ok, --no-find-links, --dry-run, --site-dirs, --quiet, --no-deps, --upgrade
+[2.413s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/yildizrover/cameranew_ws/build/cameranew_pkg': PYTHONPATH=/home/yildizrover/cameranew_ws/build/cameranew_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/yildizrover/cameranew_ws/build/cameranew_pkg/build --no-deps symlink_data
+[3.358s] Level 1:colcon.colcon_core.shell:create_environment_hook('cameranew_pkg', 'pythonpath_develop')
+[3.359s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yildizrover/cameranew_ws/build/cameranew_pkg/share/cameranew_pkg/hook/pythonpath_develop.ps1'
+[3.361s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/yildizrover/cameranew_ws/build/cameranew_pkg' returned '0': PYTHONPATH=/home/yildizrover/cameranew_ws/build/cameranew_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/yildizrover/cameranew_ws/build/cameranew_pkg/build --no-deps symlink_data
+[3.363s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yildizrover/cameranew_ws/build/cameranew_pkg/share/cameranew_pkg/hook/pythonpath_develop.dsv'
+[3.364s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yildizrover/cameranew_ws/build/cameranew_pkg/share/cameranew_pkg/hook/pythonpath_develop.sh'
+[3.376s] Level 1:colcon.colcon_core.environment:checking '/home/yildizrover/cameranew_ws/install/cameranew_pkg' for CMake module files
+[3.378s] Level 1:colcon.colcon_core.environment:checking '/home/yildizrover/cameranew_ws/install/cameranew_pkg' for CMake config files
+[3.382s] Level 1:colcon.colcon_core.environment:checking '/home/yildizrover/cameranew_ws/install/cameranew_pkg/lib'
+[3.383s] Level 1:colcon.colcon_core.environment:checking '/home/yildizrover/cameranew_ws/install/cameranew_pkg/bin'
+[3.383s] Level 1:colcon.colcon_core.environment:checking '/home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/pkgconfig/cameranew_pkg.pc'
+[3.384s] Level 1:colcon.colcon_core.environment:checking '/home/yildizrover/cameranew_ws/install/cameranew_pkg/lib/python3.10/site-packages'
+[3.385s] Level 1:colcon.colcon_core.shell:create_environment_hook('cameranew_pkg', 'pythonpath')
+[3.386s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/hook/pythonpath.ps1'
+[3.388s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/hook/pythonpath.dsv'
+[3.390s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/hook/pythonpath.sh'
+[3.392s] Level 1:colcon.colcon_core.environment:checking '/home/yildizrover/cameranew_ws/install/cameranew_pkg/bin'
+[3.393s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(cameranew_pkg)
+[3.394s] INFO:colcon.colcon_core.shell:Creating package script '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/package.ps1'
+[3.400s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/package.dsv'
+[3.402s] INFO:colcon.colcon_core.shell:Creating package script '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/package.sh'
+[3.405s] INFO:colcon.colcon_core.shell:Creating package script '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/package.bash'
+[3.410s] INFO:colcon.colcon_core.shell:Creating package script '/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/cameranew_pkg/package.zsh'
+[3.412s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/yildizrover/cameranew_ws/install/cameranew_pkg/share/colcon-core/packages/cameranew_pkg)
+[3.417s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[3.420s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[3.421s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[3.421s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[3.423s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[3.424s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/yildizrover/cameranew_ws/install/local_setup.ps1'
+[3.429s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/yildizrover/cameranew_ws/install/_local_setup_util_ps1.py'
+[3.435s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/yildizrover/cameranew_ws/install/setup.ps1'
+[3.447s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/yildizrover/cameranew_ws/install/local_setup.sh'
+[3.449s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/yildizrover/cameranew_ws/install/_local_setup_util_sh.py'
+[3.451s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/yildizrover/cameranew_ws/install/setup.sh'
+[3.461s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/yildizrover/cameranew_ws/install/local_setup.bash'
+[3.463s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/yildizrover/cameranew_ws/install/setup.bash'
+[3.471s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/yildizrover/cameranew_ws/install/local_setup.zsh'
+[3.472s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/yildizrover/cameranew_ws/install/setup.zsh'

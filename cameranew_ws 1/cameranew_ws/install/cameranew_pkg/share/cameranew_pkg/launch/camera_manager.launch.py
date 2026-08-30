@@ -1,0 +1,1 @@
+/home/yildizrover/cameranew_ws/build/cameranew_pkg/launch/camera_manager.launch.py

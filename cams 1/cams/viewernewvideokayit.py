@@ -1,0 +1,575 @@
+#!/usr/bin/env python3
+
+import rclpy
+from rclpy.node import Node
+from rclpy.executors import MultiThreadedExecutor
+from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
+
+from sensor_msgs.msg import CompressedImage
+from std_msgs.msg import String
+
+from rclpy.qos import QoSProfile
+from rclpy.qos import ReliabilityPolicy
+from rclpy.qos import HistoryPolicy
+
+import cv2
+import numpy as np
+import threading
+import time
+
+
+# =================================================
+# KAMERA TANIMLARI
+# 4 webcam. Tuslar:
+#   1 -> web1, 2 -> web2, 3 -> web3, 4 -> web4
+# camera_manager.py ile ayni isimler kullanilmali.
+# =================================================
+CAMERAS = ["web1", "web2", "web3", "web4"]
+
+CAMERA_LABELS = {
+    "web1": "CAM 1 - WEB 1",
+    "web2": "CAM 2 - WEB 2",
+    "web3": "CAM 3 - WEB 3",
+    "web4": "CAM 4 - WEB 4",
+}
+
+CAMERA_TOPICS = {
+    "web1": "/cam1/image_compressed",
+    "web2": "/cam2/image_compressed",
+    "web3": "/cam3/image_compressed",
+    "web4": "/cam4/image_compressed",
+}
+
+# Viewer tarafinda gosterilen kisa placeholder metni.
+CAMERA_SHORT = {
+    "web1": "WEB 1",
+    "web2": "WEB 2",
+    "web3": "WEB 3",
+    "web4": "WEB 4",
+}
+
+# Tus -> kamera esleme (cv2 key kodu ile).
+KEY_TO_CAMERA = {
+    ord('1'): "web1",
+    ord('2'): "web2",
+    ord('3'): "web3",
+    ord('4'): "web4",
+}
+
+# camera_manager komut esleme (viewer tusu -> manager komutu).
+CAMERA_TO_COMMAND = {
+    "web1": "1",
+    "web2": "2",
+    "web3": "3",
+    "web4": "4",
+}
+
+
+class RoverCameraViewer(Node):
+    def __init__(self):
+        super().__init__('rover_camera_viewer_node')
+
+        # =================================================
+        # PANEL BOYUTLARI VE VIDEO KAYDI
+        # =================================================
+        self.W = 640
+        self.H = 480
+
+        # Video kayit ayarlari
+        self.video_filename = f"rover_gui_record_{int(time.time())}.mp4"
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        # Birlestirilmis goruntu boyutu: 3 sutun (640*3=1920) x 2 satir (480*2=960)
+        self.video_writer = cv2.VideoWriter(self.video_filename, fourcc, 30.0, (1920, 960))
+        
+        # Viewer'in kendi throttle tavani. 
+        self.cam_fps = 30.0
+        self.cam_update_period = 1.0 / self.cam_fps
+
+        # Her kamera icin son decode zamani (throttle).
+        self.last_update_time = {name: 0.0 for name in CAMERAS}
+
+        # =================================================
+        # TESHIS: panel basina FPS ve donma (stale) takibi
+        # =================================================
+        self.frame_counter = {name: 0 for name in CAMERAS}
+        self._fps_last_counter = {name: 0 for name in CAMERAS}
+        self._fps_last_time = time.time()
+        self.display_fps = {name: 0.0 for name in CAMERAS}
+
+        # Son frame'in ulastigi an (wall clock). 0.0 = henuz gelmedi.
+        self.last_frame_wall = {name: 0.0 for name in CAMERAS}
+        # Kamera ON iken bu kadar saniye yeni frame gelmezse donmus say.
+        self.stale_seconds = 2.0
+
+        self.running = True
+        self.frame_lock = threading.Lock()
+
+        # Kamera açık/kapalı durumları
+        self.camera_states = {name: False for name in CAMERAS}
+
+        # İlk açılışta hepsi kapalı görünsün
+        self.images = {}
+        for name in CAMERAS:
+            self.images[name] = self.get_placeholder(
+                f"{CAMERA_SHORT[name]} KAPALI"
+            )
+
+        # =================================================
+        # QOS
+        # =================================================
+        image_qos = QoSProfile(
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            history=HistoryPolicy.KEEP_LAST,
+            depth=1
+        )
+
+        cmd_qos = QoSProfile(
+            reliability=ReliabilityPolicy.RELIABLE,
+            history=HistoryPolicy.KEEP_LAST,
+            depth=10
+        )
+
+        # =================================================
+        # CALLBACK GROUPLARI
+        # =================================================
+        self.cam_cbg = {name: MutuallyExclusiveCallbackGroup() for name in CAMERAS}
+        self.status_cbg = MutuallyExclusiveCallbackGroup()
+        self.timer_cbg = MutuallyExclusiveCallbackGroup()
+
+        # =================================================
+        # CAMERA MANAGER KOMUT PUBLISHER
+        # =================================================
+        self.camera_cmd_pub = self.create_publisher(
+            String,
+            '/camera_manager/command',
+            cmd_qos
+        )
+
+        self.camera_status_sub = self.create_subscription(
+            String,
+            '/camera_manager/status',
+            self.camera_status_cb,
+            cmd_qos,
+            callback_group=self.status_cbg
+        )
+
+        # =================================================
+        # GÖRÜNTÜ TOPICLERİ
+        # =================================================
+        for name in CAMERAS:
+            self.create_subscription(
+                CompressedImage,
+                CAMERA_TOPICS[name],
+                self.make_image_cb(name),
+                image_qos,
+                callback_group=self.cam_cbg[name]
+            )
+
+        # =================================================
+        # ARAYÜZ
+        # =================================================
+        self.win_name = "Yildiz Rover Camera Viewer - 4 WEB"
+
+        cv2.namedWindow(self.win_name, cv2.WINDOW_NORMAL)
+        cv2.resizeWindow(self.win_name, 1440, 540)
+
+        self.process_loop()
+
+        self.get_logger().info("Rover camera viewer baslatildi.")
+        self.get_logger().info(f"Video kaydi su dosyaya yapiliyor: {self.video_filename}")
+        self.get_logger().info("Tuslar:")
+        self.get_logger().info("1 -> WEB 1 ac/kapat")
+        self.get_logger().info("2 -> WEB 2 ac/kapat")
+        self.get_logger().info("3 -> WEB 3 ac/kapat")
+        self.get_logger().info("4 -> WEB 4 ac/kapat")
+        self.get_logger().info("q -> Hepsini kapat ve cik")
+
+        for name in CAMERAS:
+            self.get_logger().info(f"{name} topic: {CAMERA_TOPICS[name]}")
+
+    # CAMERA MANAGER STATUS
+    # =================================================
+    def camera_status_cb(self, msg):
+        """
+        Beklenen format:
+        web1:ON,web2:OFF,web3:ON,web4:OFF
+        """
+        parts = msg.data.split(',')
+
+        new_states = {}
+
+        for part in parts:
+            if ':' not in part:
+                continue
+
+            name, state = part.split(':', 1)
+            name = name.strip()
+            state = state.strip()
+
+            if name in self.camera_states:
+                new_states[name] = (state == 'ON')
+
+        with self.frame_lock:
+            for name, is_on in new_states.items():
+                old_state = self.camera_states.get(name, False)
+                self.camera_states[name] = is_on
+
+                # Kamera yeni kapandıysa paneli kapalı yap
+                if old_state and not is_on:
+                    self.set_camera_placeholder_locked(name, "KAPALI")
+
+                # Kamera yeni açıldıysa ama görüntü henüz gelmediyse açılıyor yaz
+                elif not old_state and is_on:
+                    self.set_camera_placeholder_locked(name, "ACILIYOR...")
+                    self.last_frame_wall[name] = 0.0
+
+    # =================================================
+    # KOMUT GÖNDERME
+    # =================================================
+    def send_camera_command(self, key):
+        if key not in KEY_TO_CAMERA:
+            return
+
+        name = KEY_TO_CAMERA[key]
+        command = CAMERA_TO_COMMAND[name]
+
+        msg = String()
+        msg.data = command
+        self.camera_cmd_pub.publish(msg)
+
+        with self.frame_lock:
+            if self.camera_states.get(name, False):
+                self.set_camera_placeholder_locked(name, "KAPATILIYOR...")
+            else:
+                self.set_camera_placeholder_locked(name, "ACILIYOR...")
+                self.last_frame_wall[name] = 0.0
+
+        self.get_logger().info(f"{name} icin komut gonderildi: {command}")
+
+    def send_all_off(self):
+        msg = String()
+        msg.data = "all_off"
+        self.camera_cmd_pub.publish(msg)
+
+        with self.frame_lock:
+            for name in CAMERAS:
+                self.images[name] = self.get_placeholder(
+                    f"{CAMERA_SHORT[name]} KAPALI"
+                )
+
+        self.get_logger().info("Tum kameralari kapatma komutu gonderildi.")
+
+    # =================================================
+    # PLACEHOLDER YARDIMCI
+    # =================================================
+    def set_camera_placeholder_locked(self, name, state_text):
+        if name in self.images:
+            self.images[name] = self.get_placeholder(
+                f"{CAMERA_SHORT[name]} {state_text}"
+            )
+
+    # =================================================
+    # ORTAK FRAME İŞLEME
+    # =================================================
+    def decode_resize_compressed(self, msg):
+        np_arr = np.frombuffer(msg.data, np.uint8)
+        frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+        if frame is None:
+            raise RuntimeError("Compressed image decode edilemedi.")
+
+        frame = cv2.resize(frame, (self.W, self.H))
+        return frame
+
+    # =================================================
+    # CALLBACK URETICI
+    # =================================================
+    def make_image_cb(self, name):
+        def _cb(msg):
+            now = time.time()
+
+            self.frame_counter[name] += 1
+            self.last_frame_wall[name] = now
+
+            if now - self.last_update_time[name] < self.cam_update_period:
+                return
+
+            self.last_update_time[name] = now
+
+            try:
+                frame = self.decode_resize_compressed(msg)
+
+                with self.frame_lock:
+                    self.images[name] = frame.copy()
+                    self.camera_states[name] = True
+
+            except Exception as e:
+                self.get_logger().error(f"{name} kamera hatasi: {e}")
+
+                with self.frame_lock:
+                    self.images[name] = self.get_placeholder(
+                        f"{CAMERA_SHORT[name]} HATA"
+                    )
+
+        return _cb
+
+    # =================================================
+    # GÖRSEL YARDIMCILAR
+    # =================================================
+    def get_placeholder(self, text):
+        img = np.zeros((self.H, self.W, 3), dtype=np.uint8)
+
+        cv2.rectangle(
+            img,
+            (0, 0),
+            (self.W - 1, self.H - 1),
+            (80, 80, 80),
+            3
+        )
+
+        cv2.putText(
+            img,
+            text,
+            (25, self.H // 2),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.65,
+            (0, 0, 255),
+            2
+        )
+
+        return img
+
+    def put_label(self, frame, text, state_on, fps=0.0, stale=False, age=0.0):
+        frame = frame.copy()
+
+        cv2.rectangle(
+            frame,
+            (0, 0),
+            (self.W, 42),
+            (0, 0, 0),
+            -1
+        )
+
+        state_text = "ON" if state_on else "OFF"
+
+        cv2.putText(
+            frame,
+            f"{text} [{state_text}]",
+            (15, 30),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0) if state_on else (0, 0, 255),
+            2
+        )
+
+        if state_on:
+            if fps >= 5.0:
+                fps_color = (0, 255, 0)
+            elif fps >= 1.0:
+                fps_color = (0, 255, 255)
+            else:
+                fps_color = (0, 0, 255)
+
+            fps_text = f"{fps:.0f} FPS"
+            (tw, _), _ = cv2.getTextSize(
+                fps_text, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2
+            )
+            cv2.putText(
+                frame,
+                fps_text,
+                (self.W - tw - 12, 30),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.6,
+                fps_color,
+                2
+            )
+
+        if stale:
+            overlay = frame.copy()
+            cv2.rectangle(
+                overlay,
+                (0, self.H // 2 - 26),
+                (self.W, self.H // 2 + 14),
+                (0, 0, 120),
+                -1
+            )
+            cv2.addWeighted(overlay, 0.6, frame, 0.4, 0, frame)
+
+            cv2.putText(
+                frame,
+                f"GORUNTU DONDU  {age:.0f}s",
+                (20, self.H // 2 + 4),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,
+                (0, 0, 255),
+                2
+            )
+
+        return frame
+
+    def get_help_panel(self):
+        img = np.zeros((self.H, self.W, 3), dtype=np.uint8)
+
+        lines = [
+            "KONTROL",
+            "1: WEB 1 ON/OFF",
+            "2: WEB 2 ON/OFF",
+            "3: WEB 3 ON/OFF",
+            "4: WEB 4 ON/OFF",
+            "q: ALL OFF + EXIT",
+        ]
+
+        y = 35
+
+        for i, line in enumerate(lines):
+            color = (0, 255, 0) if i == 0 else (255, 255, 255)
+
+            cv2.putText(
+                img,
+                line,
+                (25, y),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.65,
+                color,
+                2
+            )
+
+            y += 32
+
+        return img
+
+    # =================================================
+    # ARAYÜZ LOOP
+    # =================================================
+    def process_loop(self):
+        try:
+            now = time.time()
+
+            dt = now - self._fps_last_time
+            if dt >= 1.0:
+                for name in CAMERAS:
+                    c = self.frame_counter[name]
+                    self.display_fps[name] = (c - self._fps_last_counter[name]) / dt
+                    self._fps_last_counter[name] = c
+                self._fps_last_time = now
+
+            with self.frame_lock:
+                imgs = {name: self.images[name].copy() for name in CAMERAS}
+                states = {name: self.camera_states[name] for name in CAMERAS}
+
+            frames = {}
+            for name in CAMERAS:
+                last_wall = self.last_frame_wall[name]
+                age = now - last_wall if last_wall > 0 else 0.0
+                stale = (
+                    states[name]
+                    and last_wall > 0
+                    and age > self.stale_seconds
+                )
+
+                frames[name] = self.put_label(
+                    imgs[name],
+                    CAMERA_LABELS[name],
+                    states[name],
+                    fps=self.display_fps[name],
+                    stale=stale,
+                    age=age
+                )
+
+            frame_help = self.get_help_panel()
+            
+            # ZED kamerasi cikarildigi icin o alanin bos gozukmesi ve gridin bozulmamasi icin 
+            # tamamen siyah bos bir panel olusturuyoruz
+            blank_panel = np.zeros((self.H, self.W, 3), dtype=np.uint8)
+
+            top_row = cv2.hconcat([
+                frames["web1"],
+                frames["web2"],
+                frames["web3"]
+            ])
+
+            bottom_row = cv2.hconcat([
+                frames["web4"],
+                blank_panel,
+                frame_help
+            ])
+
+            combined = cv2.vconcat([
+                top_row,
+                bottom_row
+            ])
+
+            cv2.imshow(self.win_name, combined)
+
+            # Ekranda gozuken en guncel kareyi videoya kaydet
+            if hasattr(self, 'video_writer') and self.video_writer is not None:
+                self.video_writer.write(combined)
+
+            keys_pressed = set()
+            for _ in range(15):
+                k = cv2.waitKey(1)
+                if k == -1:
+                    break
+                keys_pressed.add(k & 0xFF)
+
+            for key in keys_pressed:
+                if key in KEY_TO_CAMERA:
+                    self.send_camera_command(key)
+
+                elif key == ord('q'):
+                    self.get_logger().info("q basildi. Viewer kapatiliyor.")
+                    self.send_all_off()
+                    self.running = False
+                    rclpy.shutdown()
+                    break
+
+        except Exception as e:
+            self.get_logger().error(f"Arayuz hatasi: {e}")
+
+    # =================================================
+    # NODE KAPATMA
+    # =================================================
+    def destroy_node(self):
+        self.get_logger().info("Viewer kapatiliyor.")
+        self.running = False
+        
+        # Node kapatilirken videoyu bitir ve sisteme kaydet
+        if hasattr(self, 'video_writer') and self.video_writer is not None:
+            self.video_writer.release()
+            self.get_logger().info(f"Video dosyasi basariyla kaydedildi: {self.video_filename}")
+            
+        cv2.destroyAllWindows()
+        super().destroy_node()
+
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    node = RoverCameraViewer()
+
+    executor = MultiThreadedExecutor(num_threads=6)
+    executor.add_node(node)
+
+    spin_thread = threading.Thread(target=executor.spin, daemon=True)
+    spin_thread.start()
+
+    try:
+        while rclpy.ok() and node.running:
+            node.process_loop()
+            time.sleep(1.0 / 30.0)
+
+    except KeyboardInterrupt:
+        node.send_all_off()
+
+    finally:
+        node.running = False
+        node.destroy_node()
+
+        if rclpy.ok():
+            rclpy.shutdown()
+        
+        spin_thread.join(timeout=1.0)
+
+
+if __name__ == '__main__':
+    main()
